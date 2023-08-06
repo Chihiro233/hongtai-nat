@@ -1,13 +1,16 @@
-package com.hongtai.nat.core.bootstrap;
+package com.hongtai.server.core.bootstrap;
 
-import com.hongtai.nat.config.ProxyConfig;
-import com.hongtai.nat.core.codec.ProxyMessageDecoder;
+import com.hongtai.nat.common.core.codec.ProxyMessageEncoder;
+import com.hongtai.nat.common.core.config.NettyCoreConfig;
+import com.hongtai.server.config.ProxyConfig;
+import com.hongtai.nat.common.core.codec.ProxyMessageDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -52,6 +55,10 @@ public class CmdServerStarter implements Starter {
         if (proxyConfig.getTransferLogEnable() != null && proxyConfig.getTransferLogEnable()) {
             ch.pipeline().addLast(new LoggingHandler(CmdServerStarter.class));
         }
-        ch.pipeline().addLast(new ProxyMessageDecoder());
+        ch.pipeline().addLast(new ProxyMessageDecoder(NettyCoreConfig.maxFrameLength,
+                NettyCoreConfig.lengthFieldOffset, NettyCoreConfig.lengthFieldLength,
+                NettyCoreConfig.lengthAdjustment, NettyCoreConfig.initialBytesToStrip));
+        ch.pipeline().addLast(new ProxyMessageEncoder());
+        ch.pipeline().addLast(new IdleStateHandler(proxyConfig.getReadIdle(),proxyConfig.getWriteIdle(),proxyConfig.getAllIdle()));
     }
 }

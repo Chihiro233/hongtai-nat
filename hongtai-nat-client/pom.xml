@@ -4,15 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+    </parent>
+
     <groupId>com.hongtai.nat</groupId>
     <artifactId>hongtai-nat-client</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${hongtai.nat.version}</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netty.all.version>4.1.94.Final</netty.all.version>
+        <hongtai.nat.version>1.0-SNAPSHOT</hongtai.nat.version>
     </properties>
 
     <dependencies>
@@ -20,6 +27,11 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty.all.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hongtai.nat</groupId>
+            <artifactId>hongtai-nat-common</artifactId>
+            <version>${hongtai.nat.version}</version>
         </dependency>
     </dependencies>
 

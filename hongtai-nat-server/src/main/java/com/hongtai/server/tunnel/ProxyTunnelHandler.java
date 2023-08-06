@@ -1,4 +1,4 @@
-package com.hongtai.nat.tunnel;
+package com.hongtai.server.tunnel;
 
 public class ProxyTunnelHandler {
 }

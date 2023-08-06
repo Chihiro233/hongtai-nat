@@ -1,4 +1,4 @@
-package com.hongtai.nat.core.bootstrap;
+package com.hongtai.server.core.bootstrap;
 
 
 public interface Starter {

@@ -1,4 +1,4 @@
-package com.hongtai.nat.core.codec;
+package com.hongtai.nat.common.core.codec;
 
 
 import com.hongtai.nat.common.core.ProxyMessage;

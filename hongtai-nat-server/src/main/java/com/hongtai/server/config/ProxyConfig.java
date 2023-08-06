@@ -1,4 +1,4 @@
-package com.hongtai.nat.config;
+package com.hongtai.server.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +18,12 @@ public class ProxyConfig {
      * the switch for transfer log
      */
     private Boolean transferLogEnable;
+
+    private Integer writeIdle;
+
+    private Integer readIdle;
+
+    private Integer allIdle;
 
 
 

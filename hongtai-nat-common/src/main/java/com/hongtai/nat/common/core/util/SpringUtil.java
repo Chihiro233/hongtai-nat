@@ -1,4 +1,4 @@
-package com.hongtai.server.util;
+package com.hongtai.nat.common.core.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;

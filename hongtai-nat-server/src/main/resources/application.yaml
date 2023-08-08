@@ -1,0 +1,7 @@
+proxy:
+  config:
+    port: 10880
+    transferLogEnable: true
+    writeIdle: 300
+    readIdle: 300
+    allIdle: 300

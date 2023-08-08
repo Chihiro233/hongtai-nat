@@ -2,6 +2,7 @@ package com.hongtai.nat.common.core.codec;
 
 
 import com.hongtai.nat.common.core.ProxyMessage;
+import com.hongtai.nat.common.core.config.NettyCoreConfig;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -24,11 +25,11 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
         if (in == null) {
             return null;
         }
-        // TODO 疑惑点
+        //TODO 疑惑点
         // if readable bytes length less than
-        // if (in.readableBytes() < Constant.HEAD_SIZE) {
-        //     return null;
-        // }
+        if (in.readableBytes() < NettyCoreConfig.headSize) {
+            return null;
+        }
         int frameLength = in.readInt();
         if (in.readableBytes() < frameLength) {
             return null;
@@ -36,7 +37,7 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
         ProxyMessage proxyMessage = new ProxyMessage();
         byte type = in.readByte();
         long msgId = in.readLong();
-        byte[] msgBytes = new byte[frameLength];
+        byte[] msgBytes = new byte[frameLength - NettyCoreConfig.msgIdLength - NettyCoreConfig.typeLength];
         in.readBytes(msgBytes);
         String message = new String(msgBytes, StandardCharsets.UTF_8);
 

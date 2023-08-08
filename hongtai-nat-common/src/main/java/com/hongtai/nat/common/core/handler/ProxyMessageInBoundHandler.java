@@ -2,22 +2,31 @@ package com.hongtai.nat.common.core.handler;
 
 import com.hongtai.nat.common.core.CommandDispatcher;
 import com.hongtai.nat.common.core.ProxyMessage;
+import com.hongtai.nat.common.core.util.SpringUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Slf4j
 public class ProxyMessageInBoundHandler extends SimpleChannelInboundHandler<ProxyMessage> {
-    @Resource
-    private CommandDispatcher commandDispatcher;
+    private final CommandDispatcher commandDispatcher;
+
+    public ProxyMessageInBoundHandler() {
+        super();
+        commandDispatcher = SpringUtil.getBean(CommandDispatcher.class);
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProxyMessage msg) throws Exception {
 
-        commandDispatcher.dispatch(ctx,msg);
+        commandDispatcher.dispatch(ctx, msg);
     }
 
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        log.info("启动成功");
+    }
 
     // TODO 频道阅读
     @Override

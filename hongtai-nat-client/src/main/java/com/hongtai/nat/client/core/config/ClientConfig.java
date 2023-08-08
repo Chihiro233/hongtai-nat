@@ -1,6 +1,7 @@
 package com.hongtai.nat.client.core.config;
 
 
+import java.util.Objects;
 import java.util.Properties;
 
 public class ClientConfig {
@@ -12,8 +13,12 @@ public class ClientConfig {
         properties = ClientConfigInitializer.initializeConfig();
     }
 
-    public String get(String key) {
+    public static String getStr(String key) {
         return properties.getProperty(key);
+    }
+
+    public static Integer getInt(String key) {
+        return Integer.valueOf(properties.getProperty(key));
     }
 
 }

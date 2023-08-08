@@ -15,7 +15,7 @@ public class ClientConfigInitializer {
 
     private static String CLIENT_CONFIG_KEY = "client-config";
 
-    private static String CONFIG_PATH = "/config/client.config";
+    private static String CONFIG_PATH = "config/client.config";
 
 
     public static Properties initializeConfig() {
@@ -23,6 +23,7 @@ public class ClientConfigInitializer {
 
         String pathValue = System.getProperties().getProperty(CLIENT_CONFIG_KEY);
         File configFile = StringUtils.isBlank(pathValue) ? new File(CONFIG_PATH) : new File(pathValue);
+        //System.out.println(System.getProperty("user.dir"));
         if (!configFile.exists() || !configFile.isFile()) {
             throw new ConfigFileNotExistException("config file is not exist");
         }

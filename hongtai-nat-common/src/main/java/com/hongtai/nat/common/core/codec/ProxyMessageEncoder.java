@@ -20,8 +20,9 @@ public class ProxyMessageEncoder extends MessageToByteEncoder<ProxyMessage> {
 
         }
         byte type = msg.getType();
+        out.writeInt(messageLength);
         out.writeByte(type);
-        out.writeLong(messageLength);
+        out.writeLong(msg.getMsgId());
 
         if (msgBytes != null) {
             out.writeBytes(msgBytes);

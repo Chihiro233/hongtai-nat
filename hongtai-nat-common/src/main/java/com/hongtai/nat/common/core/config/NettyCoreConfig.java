@@ -9,9 +9,11 @@ public interface NettyCoreConfig {
     Integer lengthAdjustment = 0;
     Integer initialBytesToStrip = 0;
 
+    Integer headSize = 4;
+
     Integer typeLength = 1;
 
-    Integer msgIdLength = 4;
+    Integer msgIdLength = 8;
 
 
 }

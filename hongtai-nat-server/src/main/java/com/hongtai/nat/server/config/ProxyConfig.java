@@ -1,4 +1,4 @@
-package com.hongtai.server.config;
+package com.hongtai.nat.server.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

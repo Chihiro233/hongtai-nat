@@ -1,8 +1,8 @@
-package com.hongtai.server.core;
+package com.hongtai.nat.server.core;
 
 
-import com.hongtai.server.core.bootstrap.Starter;
-import com.hongtai.server.util.SpringUtil;
+import com.hongtai.nat.server.core.bootstrap.Starter;
+import com.hongtai.nat.common.core.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -30,5 +30,6 @@ public class ServerCore implements CommandLineRunner {
                 log.error("start [{}] start error", name, e);
             }
         }
+        log.info("server start complete");
     }
 }

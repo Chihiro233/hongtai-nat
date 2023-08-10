@@ -3,7 +3,7 @@ package com.hongtai.nat.server.core.bootstrap;
 import com.hongtai.nat.common.core.codec.ProxyMessageDecoder;
 import com.hongtai.nat.common.core.codec.ProxyMessageEncoder;
 import com.hongtai.nat.common.core.config.NettyCoreConfig;
-import com.hongtai.nat.common.core.handler.ProxyMessageInBoundHandler;
+import com.hongtai.nat.common.core.channel.ProxyMessageInBoundHandler;
 import com.hongtai.nat.server.config.ProxyConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;

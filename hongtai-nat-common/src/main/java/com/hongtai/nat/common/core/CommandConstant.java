@@ -6,5 +6,7 @@ public interface CommandConstant {
 
     byte AUTH = 0x02;
 
+    byte DISCONNECT = 0x03;
+
     
 }

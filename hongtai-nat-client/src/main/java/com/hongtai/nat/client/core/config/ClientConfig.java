@@ -58,6 +58,7 @@ public class ClientConfig {
         Bootstrap proxyBootstrap = new Bootstrap();
         proxyBootstrap.group(new NioEventLoopGroup(2))
                 .channel(NioSocketChannel.class)
+                .handler()
                 .remoteAddress(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST),
                         ClientConfig.getInt(ClientConfigConstant.SERVER_PORT));
         return clientBootstrap();

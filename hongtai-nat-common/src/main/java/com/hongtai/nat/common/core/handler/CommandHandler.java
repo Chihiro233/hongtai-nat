@@ -1,6 +1,6 @@
 package com.hongtai.nat.common.core.handler;
 
-import com.hongtai.nat.common.core.ProxyMessage;
+import com.hongtai.nat.common.core.model.ProxyMessage;
 import io.netty.channel.ChannelHandlerContext;
 
 public interface CommandHandler {

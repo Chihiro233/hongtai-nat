@@ -14,7 +14,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
-public class ServerCore implements CommandLineRunner {
+public class ServerRunner implements CommandLineRunner {
 
 
     @Override

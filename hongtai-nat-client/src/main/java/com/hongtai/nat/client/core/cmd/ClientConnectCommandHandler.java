@@ -1,13 +1,12 @@
-package com.hongtai.nat.client.core.handler;
+package com.hongtai.nat.client.core.cmd;
 
-import com.alibaba.fastjson2.JSON;
 import com.hongtai.nat.client.core.channel.ProxyChannelHolder;
-import com.hongtai.nat.common.core.AttrConstant;
-import com.hongtai.nat.common.core.ChannelResultResolver;
-import com.hongtai.nat.common.core.CommandConstant;
-import com.hongtai.nat.common.core.ProxyMessage;
+import com.hongtai.nat.common.core.constant.AttrConstant;
+import com.hongtai.nat.common.core.fun.ChannelResultResolver;
+import com.hongtai.nat.common.core.constant.CommandConstant;
+import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.handler.CommandHandler;
-import com.hongtai.nat.common.core.model.ClientMetaInfo;
+import com.hongtai.nat.common.core.model.ProxyMessagePayload;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import jakarta.annotation.Resource;
@@ -22,7 +21,6 @@ public class ClientConnectCommandHandler implements CommandHandler {
     private Bootstrap clientBootstrap;
 
 
-
     @Resource
     private ProxyChannelHolder proxyChannelHolder;
 
@@ -32,18 +30,15 @@ public class ClientConnectCommandHandler implements CommandHandler {
 
         log.info("receive cmd message, the command type: {}", proxyMessage.getType());
         // 对被代理服务建立链接
-        String message = proxyMessage.getMessage();
-        ClientMetaInfo metaInfo = JSON.parseObject(message, ClientMetaInfo.class);
+        ProxyMessagePayload receiveTransferInfo = proxyMessage.getPayload();
         Channel cmdChannel = ctx.channel();
-        clientBootstrap.connect(metaInfo.getIp(), metaInfo.getPort())
+        clientBootstrap.connect(receiveTransferInfo.getIp(), receiveTransferInfo.getPort())
                 .addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (!future.isSuccess()) {
                             // 操作失败，向服务端的cmdChannel通知断开连接
-                            ClientMetaInfo cmdContentDTO = new ClientMetaInfo()
-                                    .setVisitorId(metaInfo.getVisitorId());
-                            cmdChannel.writeAndFlush(ProxyMessage.Builder.buildCmdMessage(CommandConstant.DISCONNECT, cmdContentDTO));
+                            cmdChannel.writeAndFlush(ProxyMessage.Builder.buildDisConnect(receiveTransferInfo.getAccessToken()));
                             cmdChannel.close();
                             return;
                         }
@@ -56,13 +51,15 @@ public class ClientConnectCommandHandler implements CommandHandler {
                             public void success(Channel proxyChannel) {
                                 proxyChannel.attr(AttrConstant.ref_agent_channel).set(agentChannel);
                                 agentChannel.attr(AttrConstant.ref_proxy_channel).set(proxyChannel);
+
+                                ProxyMessage proxyConnectMsg = ProxyMessage.Builder.buildProxyConnectMessage(receiveTransferInfo.getAccessToken());
+                                proxyChannel.writeAndFlush(proxyConnectMsg);
                             }
 
                             @Override
                             public void error(Channel proxyChannel) {
-                                ClientMetaInfo metaInfo2 = new ClientMetaInfo();
-                                metaInfo2.setVisitorId(metaInfo.getVisitorId());
-                                cmdChannel.writeAndFlush(ProxyMessage.Builder.buildCmdMessage(CommandConstant.DISCONNECT, metaInfo2));
+                                cmdChannel.writeAndFlush(ProxyMessage.Builder.
+                                        buildDisConnect(receiveTransferInfo.getAccessToken()));
                             }
                         });
 

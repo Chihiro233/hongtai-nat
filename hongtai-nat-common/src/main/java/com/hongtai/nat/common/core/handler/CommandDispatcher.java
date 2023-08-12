@@ -1,6 +1,6 @@
 package com.hongtai.nat.common.core.handler;
 
-import com.hongtai.nat.common.core.ProxyMessage;
+import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.util.SpringUtil;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
-package com.hongtai.nat.common.core.channel;
+package com.hongtai.nat.client.core.channel;
 
 import com.hongtai.nat.common.core.handler.CommandDispatcher;
-import com.hongtai.nat.common.core.ProxyMessage;
+import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.util.SpringUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

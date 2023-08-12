@@ -1,4 +1,4 @@
-package com.hongtai.nat.common.core;
+package com.hongtai.nat.common.core.fun;
 
 import io.netty.channel.Channel;
 

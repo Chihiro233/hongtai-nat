@@ -1,6 +1,7 @@
 package com.hongtai.nat.common.core.util;
 
 import java.time.Instant;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class IdGenerateUtil {
@@ -19,8 +20,8 @@ public class IdGenerateUtil {
         return Long.valueOf(idStr);
     }
 
-    public static void main(String[] args) {
-        System.out.println(Instant.now().getEpochSecond());
+    public static String generateAccessToken() {
+        return UUID.randomUUID().toString();
     }
 
 }

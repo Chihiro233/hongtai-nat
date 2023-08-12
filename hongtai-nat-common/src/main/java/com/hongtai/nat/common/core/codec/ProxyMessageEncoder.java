@@ -1,7 +1,7 @@
 package com.hongtai.nat.common.core.codec;
 
-import com.hongtai.nat.common.core.ProxyMessage;
 import com.hongtai.nat.common.core.config.NettyCoreConfig;
+import com.hongtai.nat.common.core.model.ProxyMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;

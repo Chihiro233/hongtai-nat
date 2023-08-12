@@ -1,6 +1,6 @@
 package com.hongtai.nat.client.core.channel;
 
-import com.hongtai.nat.common.core.ChannelResultResolver;
+import com.hongtai.nat.common.core.fun.ChannelResultResolver;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -18,7 +18,7 @@ public class ProxyChannelHolder {
     @Resource(name = "proxyBootstrap")
     private Bootstrap bootstrap;
 
-    private ConcurrentLinkedQueue<Channel> proxyChannelPool = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Channel> proxyChannelPool = new ConcurrentLinkedQueue<>();
 
     public void connect(ChannelResultResolver resultResolver) {
 

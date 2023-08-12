@@ -1,4 +1,4 @@
-package com.hongtai.nat.client.core;
+package com.hongtai.nat.client.core.booststrap;
 
 import com.hongtai.nat.client.core.config.ClientConfig;
 import com.hongtai.nat.client.core.config.ClientConfigConstant;

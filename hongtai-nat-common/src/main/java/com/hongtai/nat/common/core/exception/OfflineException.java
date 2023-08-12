@@ -1,12 +1,12 @@
 package com.hongtai.nat.common.core.exception;
 
-public class OfflineException extends RuntimeException{
+public class OfflineException extends RuntimeException {
 
-    public OfflineException(){
+    public OfflineException() {
         super();
     }
 
-    public OfflineException(String message){
+    public OfflineException(String message) {
         super(message);
     }
 

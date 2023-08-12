@@ -1,8 +1,10 @@
 package com.hongtai.nat.common.core.codec;
 
 
-import com.hongtai.nat.common.core.ProxyMessage;
+import com.alibaba.fastjson2.JSON;
 import com.hongtai.nat.common.core.config.NettyCoreConfig;
+import com.hongtai.nat.common.core.model.ProxyMessage;
+import com.hongtai.nat.common.core.model.ProxyMessagePayload;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -40,10 +42,10 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
         byte[] msgBytes = new byte[frameLength - NettyCoreConfig.msgIdLength - NettyCoreConfig.typeLength];
         in.readBytes(msgBytes);
         String message = new String(msgBytes, StandardCharsets.UTF_8);
-
+        ProxyMessagePayload payload = JSON.parseObject(message, ProxyMessagePayload.class);
         proxyMessage.setType(type);
         proxyMessage.setMsgId(msgId);
-        proxyMessage.setMessage(message);
+        proxyMessage.setPayload(payload);
 
         in.release();
         return proxyMessage;

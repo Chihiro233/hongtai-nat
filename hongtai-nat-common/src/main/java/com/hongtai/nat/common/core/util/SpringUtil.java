@@ -18,16 +18,6 @@ public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProce
 
     private static BeanFactory beanFactory;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringUtil.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        SpringUtil.beanFactory = beanFactory;
-    }
-
     public static <T> T getBean(Class<T> clazz) {
         return getBeanFactory().getBean(clazz);
     }
@@ -42,6 +32,16 @@ public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProce
 
     private static BeanFactory getBeanFactory() {
         return applicationContext == null ? beanFactory : applicationContext;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringUtil.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringUtil.beanFactory = beanFactory;
     }
 
 }

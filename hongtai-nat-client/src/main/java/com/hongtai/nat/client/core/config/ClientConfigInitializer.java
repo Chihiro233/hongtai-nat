@@ -13,9 +13,9 @@ import java.util.Properties;
 @Slf4j
 public class ClientConfigInitializer {
 
-    private static String CLIENT_CONFIG_KEY = "client-config";
+    private static final String CLIENT_CONFIG_KEY = "client-config";
 
-    private static String CONFIG_PATH = "config/client.config";
+    private static final String CONFIG_PATH = "config/client.config";
 
 
     public static Properties initializeConfig() {

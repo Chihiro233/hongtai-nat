@@ -8,8 +8,10 @@ import com.hongtai.nat.common.core.model.ProxyMessagePayload;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class ServerProxyTransferCommandHandler implements CommandHandler {
 
     @Override
@@ -23,8 +25,7 @@ public class ServerProxyTransferCommandHandler implements CommandHandler {
             log.info("the access channel associated with the  proxy channel doesn't exist");
             return;
         }
-        ProxyMessagePayload payload = message.getPayload();
-        byte[] data = payload.getData();
+        byte[] data = message.getData();
         accessChannel.writeAndFlush(data);
     }
 

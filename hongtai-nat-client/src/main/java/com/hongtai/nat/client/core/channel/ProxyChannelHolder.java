@@ -1,5 +1,7 @@
 package com.hongtai.nat.client.core.channel;
 
+import com.hongtai.nat.client.core.config.ClientConfig;
+import com.hongtai.nat.client.core.config.ClientConfigConstant;
 import com.hongtai.nat.common.core.fun.ChannelResultResolver;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -24,7 +26,7 @@ public class ProxyChannelHolder {
 
         Channel proxyChannel = proxyChannelPool.poll();
         if (proxyChannel == null) {
-            bootstrap.connect().addListener(new ChannelFutureListener() {
+            bootstrap.connect(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST),ClientConfig.getInt(ClientConfigConstant.SERVER_PORT)).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {

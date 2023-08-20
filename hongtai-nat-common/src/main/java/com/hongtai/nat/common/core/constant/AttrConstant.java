@@ -12,7 +12,11 @@ public interface AttrConstant {
 
     AttributeKey<Channel> ref_agent_channel = AttributeKey.valueOf("ref_agent_channel");
 
+    AttributeKey<String> ref_access_token = AttributeKey.valueOf("ref_access_token");
+
 
     AttributeKey<Channel> ref_cmd_channel = AttributeKey.valueOf("ref_cmd_channel");
+
+    AttributeKey<String> ref_cmd_license = AttributeKey.valueOf("ref_cmd_license");
 
 }

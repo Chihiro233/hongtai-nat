@@ -11,7 +11,7 @@ public class ProxyMessageEncoder extends MessageToByteEncoder<ProxyMessage> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ProxyMessage msg, ByteBuf out) throws Exception {
-        int messageLength = NettyCoreConfig.typeLength + NettyCoreConfig.msgIdLength;
+        int messageLength = NettyCoreConfig.typeLength + NettyCoreConfig.msgIdLength + NettyCoreConfig.payLoadLength;
         byte[] dataBytes = null;
         byte[] payLoadBytes = null;
         if (msg.getPayload() != null) {

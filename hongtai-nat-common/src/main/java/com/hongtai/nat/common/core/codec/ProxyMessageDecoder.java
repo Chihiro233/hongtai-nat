@@ -46,7 +46,7 @@ public class ProxyMessageDecoder extends LengthFieldBasedFrameDecoder {
             ProxyMessagePayload payload = JSON.parseObject(payLoadBytes, ProxyMessagePayload.class);
             proxyMessage.setPayload(payload);
         }
-        byte[] dataBytes = new byte[frameLength - NettyCoreConfig.msgIdLength - NettyCoreConfig.typeLength - payloadLength];
+        byte[] dataBytes = new byte[frameLength - NettyCoreConfig.msgIdLength - NettyCoreConfig.typeLength - NettyCoreConfig.payLoadLength - payloadLength];
         in.readBytes(dataBytes);
         proxyMessage.setType(type);
         proxyMessage.setMsgId(msgId);

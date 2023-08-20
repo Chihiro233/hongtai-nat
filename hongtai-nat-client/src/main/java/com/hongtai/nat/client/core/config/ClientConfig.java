@@ -1,14 +1,15 @@
 package com.hongtai.nat.client.core.config;
 
 
+import com.hongtai.nat.client.core.channel.AgentClientChannelHandler;
 import com.hongtai.nat.client.core.channel.CmdChannelHolder;
 import com.hongtai.nat.client.core.channel.CommandInBoundHandler;
+import com.hongtai.nat.client.core.channel.ProxyChannelClientHandler;
 import com.hongtai.nat.client.core.exception.ConnectFailException;
 import com.hongtai.nat.common.core.codec.ProxyMessageDecoder;
 import com.hongtai.nat.common.core.codec.ProxyMessageEncoder;
 import com.hongtai.nat.common.core.config.NettyCoreConfig;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
@@ -48,7 +49,15 @@ public class ClientConfig {
     @Bean("clientBootstrap")
     public Bootstrap clientBootstrap() {
         Bootstrap clientBootstrap = new Bootstrap();
-        clientBootstrap.group(new NioEventLoopGroup(2))
+        clientBootstrap
+                .group(new NioEventLoopGroup(2))
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addFirst(new LoggingHandler(AgentClientChannelHandler.class));
+                        ch.pipeline().addLast(new AgentClientChannelHandler());
+                    }
+                })
                 .channel(NioSocketChannel.class);
 
         return clientBootstrap;
@@ -59,7 +68,17 @@ public class ClientConfig {
         Bootstrap proxyBootstrap = new Bootstrap();
         proxyBootstrap.group(new NioEventLoopGroup(2))
                 .channel(NioSocketChannel.class)
-                //.handler()
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addFirst(new LoggingHandler(ProxyChannelClientHandler.class));
+                        ch.pipeline().addLast(new ProxyMessageEncoder());
+                        ch.pipeline().addLast(new ProxyMessageDecoder(NettyCoreConfig.maxFrameLength,
+                                NettyCoreConfig.lengthFieldOffset, NettyCoreConfig.lengthFieldLength,
+                                NettyCoreConfig.lengthAdjustment, NettyCoreConfig.initialBytesToStrip));
+                        ch.pipeline().addLast(new ProxyChannelClientHandler());
+                    }
+                })
                 .remoteAddress(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST),
                         ClientConfig.getInt(ClientConfigConstant.SERVER_PORT));
         return clientBootstrap();

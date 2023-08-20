@@ -8,12 +8,15 @@ import com.hongtai.nat.server.core.model.ProxyBindHolder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class ServerProxyConnectCommandHandler implements CommandHandler {
 
     @Override
     public void handle(ChannelHandlerContext ctx, ProxyMessage message) {
+        log.info("connect success");
         Channel proxyChannel = ctx.channel();
         String accessToken = message.getPayload().getAccessToken();
         Channel accessChannel = ProxyBindHolder.getAccessChannel(accessToken);

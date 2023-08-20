@@ -20,7 +20,7 @@ public class ClientTransferCommandHandler implements CommandHandler {
             proxyChannel.close();
             return;
         }
-        byte[] data = proxyMessage.getPayload().getData();
+        byte[] data = proxyMessage.getData();
         agentChannel.writeAndFlush(data);
 
     }

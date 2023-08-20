@@ -37,6 +37,11 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<ProxyMess
         log.info("启动成功");
     }
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+    }
+
     // TODO 频道阅读
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {

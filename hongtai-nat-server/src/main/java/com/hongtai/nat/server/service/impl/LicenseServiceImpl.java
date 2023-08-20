@@ -29,7 +29,7 @@ public class LicenseServiceImpl implements LicenseService {
     public LicenseModel getByLicenseKey(String licenseKey) {
         LicenseModel licenseModel = new LicenseModel();
         LambdaQueryWrapper<LicenseDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(LicenseDO::getKey, licenseKey);
+        queryWrapper.eq(LicenseDO::getLicenseKey, licenseKey);
         LicenseDO licenseDO = licenseDOMapper.selectOne(queryWrapper);
         if (licenseDO == null) {
             throw new AuthException("licenseKey isn't exist");

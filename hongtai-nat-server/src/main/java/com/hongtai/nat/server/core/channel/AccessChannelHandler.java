@@ -41,8 +41,9 @@ public class AccessChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
             InetSocketAddress sa = (InetSocketAddress) ctx.channel().localAddress();
             Channel cmdChannel = ProxyBindHolder.getCmdChannel(sa.getPort());
-            if (cmdChannel == null) {
+            if (cmdChannel == null || !cmdChannel.isActive()) {
                 accessChannel.close();
+                ProxyBindHolder.clearByProxyPort(sa.getPort());
                 throw new OfflineException("client is off-line");
             }
             ClientMetaInfo metaInfo = ProxyBindHolder.getMetaInfo(sa.getPort());

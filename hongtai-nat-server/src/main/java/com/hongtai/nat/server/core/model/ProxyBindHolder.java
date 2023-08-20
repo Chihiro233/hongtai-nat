@@ -1,11 +1,15 @@
 package com.hongtai.nat.server.core.model;
 
+import com.hongtai.nat.common.core.constant.AttrConstant;
 import com.hongtai.nat.common.core.constant.CommonConstant;
 import com.hongtai.nat.common.core.model.ClientMetaInfo;
 import com.hongtai.nat.common.core.util.IdGenerateUtil;
+import com.hongtai.nat.common.core.util.SpringUtil;
 import com.hongtai.nat.server.dal.entity.LicensePortDO;
 import com.hongtai.nat.server.service.model.LicenseModel;
+import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.util.Attribute;
 
 import java.util.List;
 import java.util.Map;
@@ -40,10 +44,14 @@ public class ProxyBindHolder {
     }
 
 
-    public static void addPortMapping(LicenseModel licenseModel) {
+    public static void load(LicenseModel licenseModel, Channel cmdChannel) {
         if (!licenseModel.isValid()) {
             return;
         }
+        String licenseKey = licenseModel.getLicenseDO().getLicenseKey();
+
+        addCmdChannelMapping(licenseKey, cmdChannel);
+
         Map<Integer, LicensePortDO> ports = licenseModel.getPorts();
         List<LicensePortDO> enablePortList = ports.values()
                 .stream().filter(licensePort -> Objects.equals(licensePort.getStatus(), CommonConstant.ENABLE)).toList();
@@ -51,16 +59,51 @@ public class ProxyBindHolder {
             ClientMetaInfo clientMetaInfo = new ClientMetaInfo();
             clientMetaInfo.setIp(licensePortDO.getProxyHost());
             clientMetaInfo.setPort(licensePortDO.getProxyPort());
-            portClientMap.put(licensePortDO.getProxyPort(), clientMetaInfo);
+
+            addMetaInfo(licensePortDO.getServerPort(),clientMetaInfo);
+
+            addCmdChannel(licensePortDO.getServerPort(), cmdChannel);
+
+            bindServerPort(licensePortDO.getServerPort());
         }
     }
 
-    public static void addCmdChannelMapping(String licenseId, Channel cmdChannel) {
+    private static void bindServerPort(Integer port) {
+        ServerBootstrap serverBootstrap = getAccessServerBootstrap();
+        serverBootstrap.bind(port);
+    }
+
+    private static void unbindServerPort(Integer port) {
+        ServerBootstrap serverBootstrap = getAccessServerBootstrap();
+    }
+
+    public static void clear(Channel cmdChannel) {
+        // clear license
+        Attribute<String> attr = cmdChannel.attr(AttrConstant.ref_cmd_license);
+        String licenseKey = attr.get();
+        clientIdToCmdChannelMap.remove(licenseKey);
+        // clear port mapping
+    }
+
+    public static void clearByProxyPort(Integer port) {
+        // clear license
+        portCmdChannelMap.remove(port);
+        // clear port mapping
+        portClientMap.remove(port);
+
+
+    }
+
+    private static void addCmdChannelMapping(String licenseId, Channel cmdChannel) {
         clientIdToCmdChannelMap.put(licenseId, cmdChannel);
     }
 
-    public static Channel addCmdChannel(Integer port) {
-        return portCmdChannelMap.get(port);
+    private static Channel addCmdChannel(Integer port, Channel cmdChannel) {
+        return portCmdChannelMap.put(port, cmdChannel);
+    }
+
+    private static void addMetaInfo(Integer serverPort, ClientMetaInfo metaInfo) {
+        portClientMap.put(serverPort, metaInfo);
     }
 
     public static ClientMetaInfo getMetaInfo(Integer port) {
@@ -78,11 +121,8 @@ public class ProxyBindHolder {
         return accessToken;
     }
 
-    public static void addMetaInfo(Integer port, ClientMetaInfo metaInfo) {
-        if (portClientMap.containsKey(port)) {
-            throw new IllegalArgumentException("server port has been assigned");
-        }
-        portClientMap.put(port, metaInfo);
+    private static ServerBootstrap getAccessServerBootstrap() {
+        return SpringUtil.getBean("accessServerBootstrap", ServerBootstrap.class);
     }
 
 }

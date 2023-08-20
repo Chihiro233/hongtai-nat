@@ -22,6 +22,10 @@ public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProce
         return getBeanFactory().getBean(clazz);
     }
 
+    public static <T> T getBean(String beanName, Class<T> tClass) {
+        return getBeanFactory().getBean(beanName, tClass);
+    }
+
     public static <T> Map<String, T> getBeansMapOfType(Class<T> clazz) {
         return applicationContext.getBeansOfType(clazz);
     }

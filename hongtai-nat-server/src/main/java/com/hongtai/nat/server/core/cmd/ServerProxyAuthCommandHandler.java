@@ -32,11 +32,8 @@ public class ServerProxyAuthCommandHandler implements CommandHandler {
         if (!licenseModel.hasPortMapping()) {
             throw new AuthException("端口映射不存在");
         }
-        // add port mapping
-        ProxyBindHolder.addPortMapping(licenseModel);
-        // add licenseId -> cmdChannel mapping
-        ProxyBindHolder.addCmdChannelMapping(licenseId, cmdChannel);
-
+        // load port mapping
+        ProxyBindHolder.load(licenseModel, cmdChannel);
     }
 
     @Override

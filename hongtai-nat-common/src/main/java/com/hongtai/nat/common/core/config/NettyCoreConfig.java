@@ -13,6 +13,8 @@ public interface NettyCoreConfig {
 
     Integer typeLength = 1;
 
+    Integer payLoadLength = 4;
+
     Integer msgIdLength = 8;
 
 

@@ -16,6 +16,8 @@ public class ProxyMessage {
 
     private ProxyMessagePayload payload;
 
+    private byte[] data;
+
 
     public static class Builder {
 
@@ -28,6 +30,29 @@ public class ProxyMessage {
             transferInfo.setAccessToken(accessToken);
             proxyMessage.setMsgId(IdGenerateUtil.generate());
             proxyMessage.setType(CommandConstant.CONNECT);
+            proxyMessage.setPayload(transferInfo);
+            return proxyMessage;
+        }
+
+        public static ProxyMessage buildAuthMessage(String licenseId) {
+
+            ProxyMessage proxyMessage = new ProxyMessage();
+            ProxyMessagePayload transferInfo = new ProxyMessagePayload();
+            transferInfo.setLicenseId(licenseId);
+            proxyMessage.setMsgId(IdGenerateUtil.generate());
+            proxyMessage.setType(CommandConstant.AUTH);
+            proxyMessage.setPayload(transferInfo);
+            return proxyMessage;
+        }
+
+        public static ProxyMessage buildAuthFailMessage(String licenseId,String message) {
+
+            ProxyMessage proxyMessage = new ProxyMessage();
+            ProxyMessagePayload transferInfo = new ProxyMessagePayload();
+            transferInfo.setLicenseId(licenseId);
+            transferInfo.setErrMsg(message);
+            proxyMessage.setMsgId(IdGenerateUtil.generate());
+            proxyMessage.setType(CommandConstant.AUTH_FAIL);
             proxyMessage.setPayload(transferInfo);
             return proxyMessage;
         }
@@ -57,7 +82,7 @@ public class ProxyMessage {
         public static ProxyMessage buildTransferMessage(String accessToken, byte[] transferData) {
             ProxyMessage proxyMessage = new ProxyMessage();
             ProxyMessagePayload transferInfo = new ProxyMessagePayload();
-            transferInfo.setData(transferData);
+            proxyMessage.setData(transferData);
             transferInfo.setAccessToken(accessToken);
 
             proxyMessage.setMsgId(IdGenerateUtil.generate());

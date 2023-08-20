@@ -4,7 +4,7 @@ import com.hongtai.nat.common.core.codec.ProxyMessageDecoder;
 import com.hongtai.nat.common.core.codec.ProxyMessageEncoder;
 import com.hongtai.nat.common.core.config.NettyCoreConfig;
 import com.hongtai.nat.server.config.ProxyConfig;
-import com.hongtai.nat.server.core.channel.ProxyChannelServerHandler;
+import com.hongtai.nat.server.core.channel.CommandChannelHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -62,6 +62,6 @@ public class CmdServerStarter implements Starter {
                 NettyCoreConfig.lengthAdjustment, NettyCoreConfig.initialBytesToStrip));
         ch.pipeline().addLast(new ProxyMessageEncoder());
         ch.pipeline().addLast(new IdleStateHandler(proxyConfig.getReadIdle(), proxyConfig.getWriteIdle(), proxyConfig.getAllIdle()));
-        ch.pipeline().addLast(new ProxyChannelServerHandler());
+        ch.pipeline().addLast(new CommandChannelHandler());
     }
 }

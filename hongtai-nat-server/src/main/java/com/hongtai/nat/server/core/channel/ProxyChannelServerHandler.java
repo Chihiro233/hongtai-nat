@@ -22,5 +22,8 @@ public class ProxyChannelServerHandler extends SimpleChannelInboundHandler<Proxy
 
     }
 
-
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        super.exceptionCaught(ctx, cause);
+    }
 }

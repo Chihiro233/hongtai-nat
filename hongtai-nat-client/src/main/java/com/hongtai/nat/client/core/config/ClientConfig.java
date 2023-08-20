@@ -2,6 +2,7 @@ package com.hongtai.nat.client.core.config;
 
 
 import com.hongtai.nat.client.core.channel.CmdChannelHolder;
+import com.hongtai.nat.client.core.channel.CommandInBoundHandler;
 import com.hongtai.nat.client.core.exception.ConnectFailException;
 import com.hongtai.nat.common.core.codec.ProxyMessageDecoder;
 import com.hongtai.nat.common.core.codec.ProxyMessageEncoder;
@@ -58,7 +59,7 @@ public class ClientConfig {
         Bootstrap proxyBootstrap = new Bootstrap();
         proxyBootstrap.group(new NioEventLoopGroup(2))
                 .channel(NioSocketChannel.class)
-                .handler()
+                //.handler()
                 .remoteAddress(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST),
                         ClientConfig.getInt(ClientConfigConstant.SERVER_PORT));
         return clientBootstrap();
@@ -82,7 +83,6 @@ public class ClientConfig {
                             if (!future.isSuccess()) {
                                 throw new ConnectFailException("connect server fail");
                             }
-
                             //log.info("connect server success,server host:[{}],server port: [{}]", ClientConfig.getStr(ClientConfigConstant.SERVER_HOST), ClientConfig.getInt(ClientConfigConstant.SERVER_PORT));
                             log.info("operate fail! case: ", future.cause());
                         }
@@ -103,6 +103,7 @@ public class ClientConfig {
                 NettyCoreConfig.lengthFieldOffset, NettyCoreConfig.lengthFieldLength,
                 NettyCoreConfig.lengthAdjustment, NettyCoreConfig.initialBytesToStrip));
         ch.pipeline().addLast(new ProxyMessageEncoder());
+        ch.pipeline().addLast(new CommandInBoundHandler());
         ch.pipeline().addLast(new IdleStateHandler(ClientConfig.getInt(ClientConfigConstant.IDLE_READ),
                 ClientConfig.getInt(ClientConfigConstant.IDLE_WRITE),
                 ClientConfig.getInt(ClientConfigConstant.IDLE_ALL)));

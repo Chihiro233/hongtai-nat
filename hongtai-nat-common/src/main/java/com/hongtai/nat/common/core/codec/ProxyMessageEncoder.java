@@ -1,31 +1,41 @@
 package com.hongtai.nat.common.core.codec;
 
+import com.alibaba.fastjson2.JSON;
 import com.hongtai.nat.common.core.config.NettyCoreConfig;
 import com.hongtai.nat.common.core.model.ProxyMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-import java.nio.charset.StandardCharsets;
-
 public class ProxyMessageEncoder extends MessageToByteEncoder<ProxyMessage> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ProxyMessage msg, ByteBuf out) throws Exception {
         int messageLength = NettyCoreConfig.typeLength + NettyCoreConfig.msgIdLength;
-        byte[] msgBytes = null;
-        if (msg.getMessage() != null) {
-            msgBytes = msg.getMessage().getBytes(StandardCharsets.UTF_8);
-            messageLength += msgBytes.length;
-
+        byte[] dataBytes = null;
+        byte[] payLoadBytes = null;
+        if (msg.getPayload() != null) {
+            payLoadBytes = JSON.toJSONBytes(msg.getPayload());
+            messageLength += payLoadBytes.length;
         }
+        if (msg.getData() != null) {
+            dataBytes = msg.getData();
+            messageLength += dataBytes.length;
+        }
+
         byte type = msg.getType();
         out.writeInt(messageLength);
         out.writeByte(type);
         out.writeLong(msg.getMsgId());
 
-        if (msgBytes != null) {
-            out.writeBytes(msgBytes);
+        if (payLoadBytes != null) {
+            out.writeInt(payLoadBytes.length);
+            out.writeBytes(payLoadBytes);
+        } else {
+            out.writeInt(0);
+        }
+        if (dataBytes != null) {
+            out.writeBytes(dataBytes);
         }
 
     }

@@ -12,4 +12,6 @@ public interface ClientConfigConstant {
 
     String SERVER_HOST = "server.host";
 
+    String LICENSE_ID = "client.license";
+
 }

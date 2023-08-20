@@ -12,9 +12,11 @@ public class ProxyMessagePayload {
 
     private Integer port;
 
+    private String licenseId;
+
     private String accessToken;
 
-    private byte[] data;
+    private String errMsg;
 
 
 }

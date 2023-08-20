@@ -7,6 +7,10 @@ public interface CommandHandler {
 
     void handle(ChannelHandlerContext ctx, ProxyMessage proxyMessage);
 
+    default void handleError(ChannelHandlerContext ctx, ProxyMessage proxyMessage, Throwable t){
+
+    }
+
     byte type();
 
 }

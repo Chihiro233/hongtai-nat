@@ -12,9 +12,13 @@ public interface CommandConstant {
 
     byte AUTH = 0x02;
 
-    byte DISCONNECT = 0x03;
+    byte AUTH_FAIL = 0x03;
 
-    byte TRANSFER = 0x04;
+    byte DISCONNECT = 0x04;
+
+    byte TRANSFER = 0x05;
+
+    byte CREATE = 0x06;
 
 
 }

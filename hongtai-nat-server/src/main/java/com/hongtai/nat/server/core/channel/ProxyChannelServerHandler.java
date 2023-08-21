@@ -19,7 +19,12 @@ public class ProxyChannelServerHandler extends SimpleChannelInboundHandler<Proxy
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProxyMessage message) throws Exception {
         dispatcher.dispatch(ctx, message);
+    }
 
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("proxy连接建立");
+        super.channelActive(ctx);
     }
 
     @Override

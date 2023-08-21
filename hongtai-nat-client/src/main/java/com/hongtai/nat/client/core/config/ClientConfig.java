@@ -80,7 +80,7 @@ public class ClientConfig {
                     }
                 })
                 .remoteAddress(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST),
-                        ClientConfig.getInt(ClientConfigConstant.SERVER_PORT));
+                        NettyCoreConfig.PROXY_BIND_PORT);
         return clientBootstrap();
     }
 

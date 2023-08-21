@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * server channel starter
  *
  * */
-@Component
+//@Component
 @Slf4j
 public class CmdServerStarter implements Starter {
 

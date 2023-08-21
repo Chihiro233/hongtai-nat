@@ -17,5 +17,7 @@ public interface NettyCoreConfig {
 
     Integer msgIdLength = 8;
 
+    Integer PROXY_BIND_PORT = 18081;
+
 
 }

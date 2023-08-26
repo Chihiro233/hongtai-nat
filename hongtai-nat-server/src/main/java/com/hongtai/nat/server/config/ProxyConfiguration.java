@@ -11,15 +11,18 @@ import com.hongtai.nat.server.core.enums.ChannelEnum;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Slf4j
 public class ProxyConfiguration {
 
 
@@ -42,6 +45,7 @@ public class ProxyConfiguration {
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(new NioEventLoopGroup(1), new NioEventLoopGroup(2))
                 .channel(NioServerSocketChannel.class)
+                .childOption(ChannelOption.SO_KEEPALIVE,true)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -69,11 +73,11 @@ public class ProxyConfiguration {
     }
 
     private void loadHandler(SocketChannel ch, ChannelEnum channelEnum) {
-
+        log.info("加载handler,类型参数:{}", channelEnum);
+        ch.pipeline().addLast(new ProxyMessageEncoder());
         ch.pipeline().addLast(new ProxyMessageDecoder(NettyCoreConfig.maxFrameLength,
                 NettyCoreConfig.lengthFieldOffset, NettyCoreConfig.lengthFieldLength,
                 NettyCoreConfig.lengthAdjustment, NettyCoreConfig.initialBytesToStrip));
-        ch.pipeline().addLast(new ProxyMessageEncoder());
         ProxyConfig proxyConfig = SpringUtil.getBean(ProxyConfig.class);
         switch (channelEnum) {
             case CMD -> {

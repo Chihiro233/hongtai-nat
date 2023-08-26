@@ -13,6 +13,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -51,6 +52,7 @@ public class ClientConfig {
         Bootstrap clientBootstrap = new Bootstrap();
         clientBootstrap
                 .group(new NioEventLoopGroup(2))
+                .option(ChannelOption.SO_KEEPALIVE,true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -81,7 +83,7 @@ public class ClientConfig {
                 })
                 .remoteAddress(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST),
                         NettyCoreConfig.PROXY_BIND_PORT);
-        return clientBootstrap();
+        return proxyBootstrap;
     }
 
     @Bean

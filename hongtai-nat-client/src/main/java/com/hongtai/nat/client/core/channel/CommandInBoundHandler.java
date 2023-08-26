@@ -2,11 +2,13 @@ package com.hongtai.nat.client.core.channel;
 
 import com.hongtai.nat.client.core.config.ClientConfig;
 import com.hongtai.nat.client.core.config.ClientConfigConstant;
+import com.hongtai.nat.common.core.constant.AttrConstant;
 import com.hongtai.nat.common.core.handler.CommandDispatcher;
 import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.util.SpringUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,6 +47,12 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<ProxyMess
     // TODO 频道阅读
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+        Channel agentChannel = ctx.attr(AttrConstant.ref_agent_channel).get();
+        boolean writable = ctx.channel().isWritable();
+        if (agentChannel != null) {
+            log.info("读写状态改变，{}", writable);
+            agentChannel.config().setOption(ChannelOption.AUTO_READ, ctx.channel().isWritable());
+        }
         super.channelWritabilityChanged(ctx);
     }
 }

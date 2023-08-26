@@ -27,7 +27,7 @@ public class ProxyChannelHolder {
 
         Channel proxyChannel = proxyChannelPool.poll();
         if (proxyChannel == null) {
-            bootstrap.connect(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST), NettyCoreConfig.PROXY_BIND_PORT).addListener(new ChannelFutureListener() {
+            bootstrap.connect().addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {

@@ -1,6 +1,5 @@
 package com.hongtai.nat.server.core.channel;
 
-import com.hongtai.nat.common.core.constant.AttrConstant;
 import com.hongtai.nat.common.core.handler.CommandDispatcher;
 import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.util.SpringUtil;
@@ -8,7 +7,6 @@ import com.hongtai.nat.server.core.model.ProxyBindHolder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.Attribute;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,8 +28,6 @@ public class CommandChannelHandler extends SimpleChannelInboundHandler<ProxyMess
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel cmdChannel = ctx.channel();
         ProxyBindHolder.clear(cmdChannel);
-
-
         super.channelInactive(ctx);
     }
 }

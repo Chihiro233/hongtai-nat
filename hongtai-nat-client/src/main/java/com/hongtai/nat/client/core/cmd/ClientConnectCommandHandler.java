@@ -54,10 +54,17 @@ public class ClientConnectCommandHandler implements CommandHandler {
 
                                 ProxyMessage proxyConnectMsg = ProxyMessage.Builder.buildProxyConnectMessage(receiveTransferInfo.getAccessToken());
                                 ChannelFuture channelFuture = proxyChannel.writeAndFlush(proxyConnectMsg);
+                                try{
+                                    channelFuture.await();
+                                }catch (Exception e){
+                                    log.error("有问题",e);
+                                }
                                 if(channelFuture.isSuccess()){
                                     log.info("发送连接联立消息成功");
+                                    agentChannel.config().setOption(ChannelOption.AUTO_READ, true);
                                 }else{
                                     log.info("发送连接消息失败");
+                                    log.error("发送失败原因:",channelFuture.cause());
                                 }
                             }
 

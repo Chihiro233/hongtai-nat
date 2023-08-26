@@ -26,6 +26,7 @@ public class AccessChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
         }
         // 向 proxyChannel传输原始数据 ？
         byte[] proxyData = new byte[msg.readableBytes()];
+        msg.readBytes(proxyData);
         // 生成 accessToken 的时机可能要斟酌一下 TODO
         String accessToken = IdGenerateUtil.generateAccessToken();
         proxyChannel.writeAndFlush(ProxyMessage.Builder.buildTransferMessage(accessToken, proxyData));

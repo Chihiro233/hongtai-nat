@@ -2,9 +2,10 @@ package com.hongtai.nat.server.core.cmd;
 
 import com.hongtai.nat.common.core.constant.AttrConstant;
 import com.hongtai.nat.common.core.constant.CommandConstant;
-import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.handler.CommandHandler;
-import com.hongtai.nat.common.core.model.ProxyMessagePayload;
+import com.hongtai.nat.common.core.model.ProxyMessage;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,11 @@ public class ServerProxyTransferCommandHandler implements CommandHandler {
             return;
         }
         byte[] data = message.getData();
-        accessChannel.writeAndFlush(data);
+        String msg = new String(data);
+        log.info("返回给调用方的消息:{}", msg);
+        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer();
+        byteBuf.writeBytes(data);
+        accessChannel.writeAndFlush(byteBuf);
     }
 
     @Override

@@ -6,20 +6,20 @@ import com.hongtai.nat.common.core.constant.AttrConstant;
 import com.hongtai.nat.common.core.handler.CommandDispatcher;
 import com.hongtai.nat.common.core.model.ProxyMessage;
 import com.hongtai.nat.common.core.util.SpringUtil;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CommandInBoundHandler extends SimpleChannelInboundHandler<ProxyMessage> {
+public class CommandInBoundHandler extends SimpleChannelInboundHandler<ProxyMessage>{
     private final CommandDispatcher commandDispatcher;
 
     public CommandInBoundHandler() {
         super();
         commandDispatcher = SpringUtil.getBean(CommandDispatcher.class);
     }
+
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProxyMessage msg) throws Exception {
@@ -41,6 +41,24 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<ProxyMess
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        Bootstrap cmdBootstrap = SpringUtil.getBean("cmdBootstrap", Bootstrap.class);
+
+        Channel cmdChannel = ctx.channel();
+
+        cmdBootstrap.connect().addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                if(!future.isSuccess()){
+                    // if reconnect is still fail, fire the inactive event
+                    log.info("start to fire the channel inactive");
+                    cmdChannel.pipeline().fireChannelInactive();
+
+                }else{
+                    log.info("reconnect success!");
+                }
+            }
+        });
+
         super.channelInactive(ctx);
     }
 
@@ -55,6 +73,7 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<ProxyMess
         }
         super.channelWritabilityChanged(ctx);
     }
+
 }
 
 

@@ -49,6 +49,7 @@ public class ProxyBindHolder {
             return;
         }
         String licenseKey = licenseModel.getLicenseDO().getLicenseKey();
+        cmdChannel.attr(AttrConstant.ref_cmd_license).set(licenseKey);
 
         addCmdChannelMapping(licenseKey, cmdChannel);
 

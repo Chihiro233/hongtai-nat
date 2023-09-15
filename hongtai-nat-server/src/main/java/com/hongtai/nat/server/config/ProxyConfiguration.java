@@ -41,7 +41,7 @@ public class ProxyConfiguration {
     }
 
     @Bean("cmdServerBootstrap")
-    public ServerBootstrap cmdServerBootstrap() {
+    public ServerBootstrap cmdServerBootstrap(ProxyConfig proxyConfig) {
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(new NioEventLoopGroup(1), new NioEventLoopGroup(2))
                 .channel(NioServerSocketChannel.class)
@@ -52,7 +52,7 @@ public class ProxyConfiguration {
                         loadHandler(ch, ChannelEnum.CMD);
                     }
                 });
-        ProxyConfig proxyConfig = SpringUtil.getBean(ProxyConfig.class);
+        // ProxyConfig proxyConfig = SpringUtil.getBean(ProxyConfig.class);
         bootstrap.bind(proxyConfig.getPort()).syncUninterruptibly();
         return bootstrap;
     }

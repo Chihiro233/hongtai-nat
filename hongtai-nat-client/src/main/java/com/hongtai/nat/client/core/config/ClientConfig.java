@@ -1,10 +1,7 @@
 package com.hongtai.nat.client.core.config;
 
 
-import com.hongtai.nat.client.core.channel.AgentClientChannelHandler;
-import com.hongtai.nat.client.core.channel.CmdChannelHolder;
-import com.hongtai.nat.client.core.channel.CommandInBoundHandler;
-import com.hongtai.nat.client.core.channel.ProxyChannelClientHandler;
+import com.hongtai.nat.client.core.channel.*;
 import com.hongtai.nat.client.core.exception.ConnectFailException;
 import com.hongtai.nat.common.core.codec.ProxyMessageDecoder;
 import com.hongtai.nat.common.core.codec.ProxyMessageEncoder;
@@ -52,7 +49,7 @@ public class ClientConfig {
         Bootstrap clientBootstrap = new Bootstrap();
         clientBootstrap
                 .group(new NioEventLoopGroup(2))
-                .option(ChannelOption.SO_KEEPALIVE,true)
+                .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -86,8 +83,8 @@ public class ClientConfig {
         return proxyBootstrap;
     }
 
-    @Bean
-    public CmdChannelHolder cmdChannelHolder() {
+    @Bean("cmdBootstrap")
+    public Bootstrap cmdBootstrap(ClientConfig clientConfig) {
         try {
             Bootstrap bootstrap = new Bootstrap();
             ChannelFuture channelFuture = bootstrap.group(new NioEventLoopGroup(1))
@@ -95,10 +92,11 @@ public class ClientConfig {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            loadHandler(ch);
+                            loadHandler(ch, bootstrap);
                         }
                     })
-                    .connect(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST), ClientConfig.getInt(ClientConfigConstant.SERVER_PORT)).addListener(new ChannelFutureListener() {
+                    .remoteAddress(ClientConfig.getStr(ClientConfigConstant.SERVER_HOST), ClientConfig.getInt(ClientConfigConstant.SERVER_PORT))
+                    .connect().addListener(new ChannelFutureListener() {
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
                             if (!future.isSuccess()) {
@@ -111,19 +109,21 @@ public class ClientConfig {
             if (!channelFuture.isSuccess()) {
                 throw new ConnectFailException("connect server fail");
             }
-            return new CmdChannelHolder(channelFuture.channel());
+            return bootstrap;
         } catch (Exception e) {
             log.error("connect server fail, case: ", e);
             throw new ConnectFailException("connect server fail");
         }
     }
 
-    private void loadHandler(SocketChannel ch) {
+    private void loadHandler(SocketChannel ch, Bootstrap bootstrap) {
+
         ch.pipeline().addFirst(new LoggingHandler(CmdChannelHolder.class));
         ch.pipeline().addLast(new ProxyMessageDecoder(NettyCoreConfig.maxFrameLength,
                 NettyCoreConfig.lengthFieldOffset, NettyCoreConfig.lengthFieldLength,
                 NettyCoreConfig.lengthAdjustment, NettyCoreConfig.initialBytesToStrip));
         ch.pipeline().addLast(new ProxyMessageEncoder());
+        ch.pipeline().addLast(new ReconnectChannelHandler(bootstrap, 3));
         ch.pipeline().addLast(new CommandInBoundHandler());
         ch.pipeline().addLast(new IdleStateHandler(ClientConfig.getInt(ClientConfigConstant.IDLE_READ),
                 ClientConfig.getInt(ClientConfigConstant.IDLE_WRITE),

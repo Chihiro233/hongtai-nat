@@ -71,5 +71,5 @@ public class CmdServerStarter implements Starter {
         ch.pipeline().addLast(new CommandChannelHandler());
     }
 
-    // 提交2
+    // 提交2xxxxxx
 }
